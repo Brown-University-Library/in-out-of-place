@@ -1,66 +1,90 @@
 <!DOCTYPE html>
 <html>
-<html lang = "en">
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+      <title>
+        In and Out of Place: Tracking Resource Extractions from Treaty Lands
+      </title>
 
-<head>
-    <meta charset = "UTF-8" />
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
-    <title>In and Out of Place: Tracking Resource Extractions from Treaty Lands</title>
-
-    <!--Leaflet CSS -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      <!--Leaflet CSS -->
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-        crossorigin=""/>
+        crossorigin=""
+      />
 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/slider.css">
-      
-    <!--Leaflet + jQuery js-->
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      />
+      <link rel="stylesheet" href="css/main.css" />
+      <link rel="stylesheet" href="css/slider.css" />
+
+      <!--Leaflet + jQuery js-->
+      <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-        crossorigin=""></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        crossorigin=""
+      ></script>
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+      <!--Time Slider-->
+      <script src="dist/leaflet-timeline-slider.min.js"></script>
+      <script src="src/leaflet-timeline-slider.js"></script>
+      <script src="src/timeslider.js"></script>
+      <!--Main JS for the page-->
+      <script type="text/javascript" src="index.js"></script>
+    </head>
+    <body onload="init()">
+      <!--HEADER-->
+      <div class="header-main">
+        <div class="header-main-title">
+          <h1 class="header-main-title">
+            In and Out of Place:<br />Tracking Resources Extractions from Treaty
+            Lands, 1874
+          </h1>
+        </div>
+        <button class="button"><a href="#credit">Credit</a></button>
+        <button class="button"><a href="#credit">About</a></button>
+        <div class="dropdown">
+          <button class="dropbtn">
+            Expeditions
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a
+              href="https://brown-university-library.github.io/in-out-of-place-custer/"
+              target="_blank"
+              >Custer's Expedition, 1874</a
+            >
+            <a href="#" target="_blank">Marsh's Expedition</a>
+            <a href="#" target="_blank">Black Elk's Expedition</a>
+          </div>
+        </div>
+      </div>
 
-    <!--Time Slider-->
-        <script src="dist/leaflet-timeline-slider.min.js"></script>
-        <script src="src/leaflet-timeline-slider.js"></script>
-        <script src="src/timeslider.js"></script>
-      
-</head>
-<body onload="init()">
+      <!--Basemap and slider-->
+      <div id="map">
+        <input
+          id="slider"
+          type="range"
+          min="0"
+          max="1"
+          step="0.1"
+          value="1"
+          oninput="overlay.setOpacity(this.value)"
+        />
+      </div>
 
-    <!--HEADER-->
-        <div class="header-main">
-            <div class="header-main-title">
-                <h1 class="header-main-title">In and Out of Place:<br>Tracking Resources Extractions from Treaty Lands, 1874</h1>
-            </div>
-            <button class="button"><a href="#credit">Credit</a></button>
-            <button class="button"><a href="#credit">About</a></button>
-            <div class="dropdown">
-                <button class="dropbtn">Expeditions
-                    <i class="fa fa-caret-down"></i>
-                </button>
-                <div class="dropdown-content">
-                    <a href="https://brown-university-library.github.io/in-out-of-place-custer/" target="_blank">Custer's Expedition, 1874</a>
-                    <a href="#" target="_blank">Marsh's Expedition</a>
-                    <a href="#" target="_blank">Black Elk's Expedition</a>
-                </div>
-            </div>
-        </div> 
-        
-    <!--Basemap and slider-->    
-    <div id="map">
-            <input id="slider" type="range" min="0" max="1" step="0.1" value="1" oninput="overlay.setOpacity(this.value)">  
-    </div>
-    
-    <!--Time Slider-->   
-    <div class="range">
-        <input type="range" min="0" max="6" step="1" value="0">
-    </div>
-    
-    <ul class="range-labels">
+      <!--Time Slider-->
+      <div class="range">
+        <input type="range" min="0" max="6" step="1" value="0" />
+      </div>
+
+      <ul class="range-labels">
         <li>Long Ago</li>
         <li>1851</li>
         <li>1868</li>
@@ -68,55 +92,7 @@
         <li>1877</li>
         <li>1889</li>
         <li>Today</li>
-    </ul>
-
-    <!--Adding map and overlay-->
-    <script type="text/javascript">
-        var overlay;
-        function init() {
-            var mapBounds = new L.LatLngBounds(
-                new L.LatLng(-85.051129, -180),
-                new L.LatLng(85.051129, 180));
-            var mapMinZoom = 1;
-            var mapMaxZoom = 11;
-        var map = L.map('map', {minZoom: 1, maxZoom: 11}).setView([43.8692810, -103.5264874], 6);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        overlay = L.tileLayer('https://cawm.lib.uiowa.edu/tiles/{z}/{x}/{y}.png', {
-            minZoom: mapMinZoom, maxZoom: mapMaxZoom,
-            bounds: mapBounds,
-            opacity: 0.95
-            }).addTo(map);
-        
-        var sites = "geojson/sites.geojson";
-        
-        fetch(sites)
-            .then((res) => res.json())
-            .then((data) => {
-              console.log("ETST", L.geoJSON(data));
-              L.geoJSON(data).addTo(map);
-            })
-            .catch(function (error) {
-              console.log(`This is the error: ${error}`);
-            });
-
-        var expo = "geojson/expo.geojson";
-        
-        fetch(expo)
-            .then((res) => res.json())
-            .then((data) => {
-              console.log("ETST", L.geoJSON(data));
-              L.geoJSON(data).addTo(map);
-            })
-            .catch(function (error) {
-              console.log(`This is the error: ${error}`);
-            });
-
-    //need js code to connect geojson data with timeslider//
-
-        L.control.timeslider({
-                timelineItems: ["Long Ago", "1851", "1868", "1874", "1877", "1889", "Today",],
-                changeMap: changeMapFunction }).addTo(mymap);
-        }    
-    </script>     
-</body>
+      </ul>
+    </body>
+  </html>
 </html>
