@@ -1,6 +1,11 @@
 let overlay;
 
+// Main routine: initialize map with timeslider
+
 function init() {
+
+  // Set up map
+
   let mapBounds = new L.LatLngBounds(
     new L.LatLng(-85.051129, -180),
     new L.LatLng(85.051129, 180)
@@ -19,6 +24,8 @@ function init() {
     opacity: 0.95,
   }).addTo(map);
 
+  // Load sites geoJSON
+
   let sites = "geojson/sites.geojson";
 
   fetch(sites)
@@ -28,8 +35,10 @@ function init() {
       L.geoJSON(data).addTo(map);
     })
     .catch(function (error) {
-      console.log(`This is the error: ${error}`);
+      console.log(`Error loading sites geoJSON: ${error}`);
     });
+
+  // Load expo geoJSON
 
   let expo = "geojson/expo.geojson";
 
@@ -40,7 +49,7 @@ function init() {
       L.geoJSON(data).addTo(map);
     })
     .catch(function (error) {
-      console.log(`This is the error: ${error}`);
+      console.log(`Error loading expo geoJSON: ${error}`);
     });
 
   const changeMapFunction = function () {}; // placeholder
