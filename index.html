@@ -82,7 +82,7 @@
                     new L.LatLng(85.051129, 180));
                 var mapMinZoom = 1;
                 var mapMaxZoom = 11;
-            var map = L.map('map', {minZoom: 1, maxZoom: 11}).setView([43.8692810, -103.5264874], 6);
+                map = L.map('map', {minZoom: 1, maxZoom: 11}).setView([43.8692810, -103.5264874], 6);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
             overlay = L.tileLayer('https://cawm.lib.uiowa.edu/tiles/{z}/{x}/{y}.png', {
                 minZoom: mapMinZoom, maxZoom: mapMaxZoom,
@@ -100,11 +100,12 @@
 
         function filterDataPoints(selectedTime) {
           console.log("Filtering data points for selected time:", selectedTime);
-          // Remove existing data points from the map
-          if (typeof window.dataLayer !== 'undefined') {
-            map.removeLayer(window.dataLayer);
-          }
 
+          // Remove existing data points from the map
+          if (typeof window.dataLayer !== 'undefined') { 
+            map.removeLayer(window.dataLayer); 
+            } 
+          
         // Filter data points based on the selected time
         fetch('geojson/sites.geojson')
             .then((res) => res.json())
